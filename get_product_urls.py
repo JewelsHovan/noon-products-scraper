@@ -122,7 +122,7 @@ def scrape_all_pages(start_page=1, end_page=5):
 
 # Main execution
 if __name__ == "__main__":
-    # Scrape pages 1 through 5
+    # Scrape pages 1 through 5 - can change to scrape more pages -> should also dynamically find the last page 
     all_products = scrape_all_pages(1, 5)
     
     if all_products:

@@ -5,11 +5,11 @@ product details from JSON data embedded within <script> tags. The extracted info
 includes product names and their corresponding URLs. The module can scrape multiple pages
 and save the combined results into a JSON file.
 """
-import requests
 from bs4 import BeautifulSoup
 import json
 import time
 from headers import headers
+from security import safe_requests
 
 url = f'https://www.noon.com/uae-en/sports-and-outdoors/exercise-and-fitness/yoga-16328/?isCarouselView=false&limit=50&page=2'
 
@@ -87,7 +87,7 @@ def scrape_page(page_number):
     """
     url = f'https://www.noon.com/uae-en/sports-and-outdoors/exercise-and-fitness/yoga-16328/?isCarouselView=false&limit=50&page={page_number}'
     
-    response = requests.get(url, headers=headers, timeout=60)
+    response = safe_requests.get(url, headers=headers, timeout=60)
     json_data = find_and_extract_json(response.text)
     
     if json_data:

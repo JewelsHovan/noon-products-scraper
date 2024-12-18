@@ -1,16 +1,29 @@
+"""
+This module scrapes product information from Noon.com, specifically from the yoga section.
+It utilizes requests to fetch web pages, BeautifulSoup to parse HTML content, and extracts 
+product details from JSON data embedded within <script> tags. The extracted information 
+includes product names and their corresponding URLs. The module can scrape multiple pages
+and save the combined results into a JSON file.
+"""
 import requests
 from bs4 import BeautifulSoup
-from typing import List
 import json
 import time
 from headers import headers
 
-#url = 'https://www.noon.com/_next/data/bigalog-a18cbfcc8fcee7b143949c818af903078f57319d/uae-en/sports-and-outdoors/exercise-and-fitness/yoga-16328.json?isCarouselView=false&limit=50&page=2&sort%5Bby%5D=popularity&sort%5Bdir%5D=desc&catalog=sports-and-outdoors&catalog=exercise-and-fitness&catalog=yoga-16328'
-
 url = f'https://www.noon.com/uae-en/sports-and-outdoors/exercise-and-fitness/yoga-16328/?isCarouselView=false&limit=50&page=2'
 
 def extract_product_info(json_data):
-    """Extracts product names and URLs from a JSON string."""
+    """
+    Extracts product names and URLs from a JSON string.
+
+    Args:
+        json_data (dict): The JSON data containing product information.
+
+    Returns:
+        list: A list of dictionaries, each containing the 'name' and 'url' of a product.
+              Returns None if an error occurs during processing.
+    """
     try:
         data = json_data
         products = []
@@ -38,6 +51,12 @@ def find_and_extract_json(html_content):
     """
     Finds and extracts the specific JSON data from within a <script> tag 
     that contains product information, identified by the @type "ItemList".
+
+    Args:
+        html_content (str): The HTML content of the page.
+
+    Returns:
+        dict: The JSON data containing product information if found, otherwise None.
     """
     soup = BeautifulSoup(html_content, 'html.parser')
     script_tags = soup.find_all('script', type='application/ld+json')
@@ -57,7 +76,15 @@ def find_and_extract_json(html_content):
     return None
 
 def scrape_page(page_number):
-    """Scrape a single page and return the products"""
+    """
+    Scrape a single page and return the products.
+
+    Args:
+        page_number (int): The page number to scrape.
+
+    Returns:
+        list: A list of product dictionaries extracted from the page.
+    """
     url = f'https://www.noon.com/uae-en/sports-and-outdoors/exercise-and-fitness/yoga-16328/?isCarouselView=false&limit=50&page={page_number}'
     
     response = requests.get(url, headers=headers, timeout=60)
@@ -68,7 +95,16 @@ def scrape_page(page_number):
     return []
 
 def scrape_all_pages(start_page=1, end_page=5):
-    """Scrape multiple pages and combine the results"""
+    """
+    Scrape multiple pages and combine the results.
+
+    Args:
+        start_page (int): The starting page number.
+        end_page (int): The ending page number.
+
+    Returns:
+        list: A list of product dictionaries from all scraped pages.
+    """
     all_products = []
     
     for page in range(start_page, end_page + 1):

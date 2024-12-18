@@ -1,1 +1,7 @@
 __pycache__/
+
+data/scraped_products/products_partial.json
+
+.DS_Store
+
+.env
